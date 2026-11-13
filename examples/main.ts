@@ -1,19 +1,14 @@
+import { createBootstrap } from 'bootstrap-vue-next'
 import { createApp } from 'vue'
 
-import { createVuetify } from 'vuetify'
 import App from './App.vue'
+import { bootstrapProTipTap } from './tiptap'
 
-import { vuetifyProTipTap } from './tiptap'
-import 'vuetify/styles'
-
-const vuetify = createVuetify()
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
 
 const app = createApp(App)
-app.use(vuetify)
-app.use(vuetifyProTipTap)
-
-// fix warning injected property "decorationClasses" is a ref and will be auto-unwrapped
-// https://github.com/ueberdosis/tiptap/issues/1719
-app.config.unwrapInjectedRef = true
+app.use(createBootstrap())
+app.use(bootstrapProTipTap)
 
 app.mount('#app')

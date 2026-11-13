@@ -2,24 +2,30 @@
 import type { Editor } from '@tiptap/vue-3'
 import type { CreateTablePayload, TableACtionKey, TableItem } from './type'
 
-import { computed, ref, unref } from 'vue'
+import { BListGroup, BListGroupItem } from 'bootstrap-vue-next'
+import { computed, ref, unref, watch } from 'vue'
+import Icon from '@/components/Icon.vue'
 import { getIcon } from '@/constants/icons'
 
 import { useLocale } from '@/locales'
+import ActivatorPopover from '../ActivatorPopover.vue'
 import CreateTablePopover from './CreateTablePopover.vue'
 
 interface Props {
   editor: Editor
-  activator?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  activator: undefined,
-})
+const props = withDefaults(defineProps<Props>(), {})
 
 const { t } = useLocale()
 
 const menu = ref<boolean>(false)
+const showGrid = ref<boolean>(false)
+
+watch(menu, (val) => {
+  if (!val)
+    showGrid.value = false
+})
 const items = computed<TableItem[]>(() => {
   return [
     {
@@ -124,6 +130,7 @@ function setTable<T extends object>(key?: TableACtionKey, options?: T) {
   }
 
   actions[key]?.()
+  menu.value = false
 }
 
 function createTable(options: CreateTablePayload) {
@@ -133,34 +140,39 @@ function createTable(options: CreateTablePayload) {
 </script>
 
 <template>
-  <VMenu v-model="menu" activator="parent">
-    <VList density="compact">
-      <template v-for="(item, index) in items">
-        <VListItem v-if="item.key === 'insert-table'" :key="index" :disabled="item.disabled">
-          <template #prepend>
-            <VIcon :icon="item.icon" />
-          </template>
+  <ActivatorPopover v-model="menu">
+    <BListGroup flush class="bootstrap-pro-tiptap-menu">
+      <template v-for="(item, index) in items" :key="index">
+        <template v-if="item.key === 'insert-table'">
+          <BListGroupItem
+            button
+            class="d-flex align-items-center gap-2 py-1"
+            :active="showGrid"
+            :disabled="item.disabled"
+            @click="showGrid = !showGrid"
+          >
+            <Icon :icon="item.icon" />
+            <span>{{ item.title }}</span>
+          </BListGroupItem>
 
-          <VListItemTitle>{{ item.title }}</VListItemTitle>
+          <div v-if="showGrid" class="list-group-item p-0">
+            <CreateTablePopover @create-table="createTable" />
+          </div>
+        </template>
 
-          <CreateTablePopover v-if="item.key === 'insert-table'" :key="index" @create-table="createTable" />
-        </VListItem>
-
-        <VListItem
+        <BListGroupItem
           v-else-if="item.type === 'item'"
-          :key="`item-${index}`"
+          button
+          class="d-flex align-items-center gap-2 py-1"
           :disabled="item.disabled"
           @click="setTable(item.key)"
         >
-          <template #prepend>
-            <VIcon :icon="item.icon" />
-          </template>
+          <Icon :icon="item.icon" />
+          <span>{{ item.title }}</span>
+        </BListGroupItem>
 
-          <VListItemTitle>{{ item.title }}</VListItemTitle>
-        </VListItem>
-
-        <VDivider v-else :key="`divider-${index}`" />
+        <hr v-else class="my-0">
       </template>
-    </VList>
-  </VMenu>
+    </BListGroup>
+  </ActivatorPopover>
 </template>

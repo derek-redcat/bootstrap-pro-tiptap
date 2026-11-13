@@ -1,4 +1,4 @@
-const TIPTAP_TIP: string = '[vuetify-pro-tiptap]'
+const TIPTAP_TIP: string = '[bootstrap-pro-tiptap]'
 
 export default class Logger {
   static warn(msg: string) {

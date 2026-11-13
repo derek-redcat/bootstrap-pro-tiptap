@@ -1,14 +1,15 @@
 <script setup lang="ts">
+import { BAlert, BFormCheckbox, BFormGroup, BFormInput, BFormSelect } from 'bootstrap-vue-next'
 import { computed, unref, watch } from 'vue'
 
 interface SelectImageProps {
-  modelValue?: Record<string, string>
+  modelValue?: Record<string, any>
   upload?: (file: File) => Promise<string> // vue warn
   t: (path: string) => string // vue warn
 }
 
 interface SelectImageEmits {
-  (event: 'update:modelValue', form?: Record<string, string>): void
+  (event: 'update:modelValue', form?: Record<string, any>): void
 }
 
 const props = withDefaults(defineProps<SelectImageProps>(), {
@@ -43,11 +44,19 @@ watch(
 </script>
 
 <template>
-  <VAlert class="mb-4" type="info" text="Select tab is custom component" />
+  <BAlert class="mb-3" variant="info" :model-value="true">
+    Select tab is custom component
+  </BAlert>
 
-  <VSelect v-model="form.src" label="Select Image" :items="items" item-value="src" item-title="alt" />
+  <BFormGroup label="Select Image" class="mb-3">
+    <BFormSelect v-model="form.src" :options="items" value-field="src" text-field="alt" />
+  </BFormGroup>
 
-  <VTextField v-model="form.alt" label="Alt" />
+  <BFormGroup label="Alt" class="mb-3">
+    <BFormInput v-model="form.alt" />
+  </BFormGroup>
 
-  <VCheckbox v-model="form.lockAspectRatio" label="Lock original aspect ratio" />
+  <BFormCheckbox v-model="form.lockAspectRatio">
+    Lock original aspect ratio
+  </BFormCheckbox>
 </template>

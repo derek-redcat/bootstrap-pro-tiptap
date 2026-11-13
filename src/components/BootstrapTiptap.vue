@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import type { Editor as CoreEditor } from '@tiptap/core'
 import type { AnyExtension, EditorOptions } from '@tiptap/vue-3'
-import type { VuetifyTiptapOnChange } from '@/type'
+import type { BootstrapTiptapOnChange } from '@/type'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
 import { computed, provide, ref, toRef, unref, useAttrs, watch } from 'vue'
 
-import { useTheme } from 'vuetify'
 import { EDITOR_UPDATE_THROTTLE_WAIT_TIME, EDITOR_UPDATE_WATCH_THROTTLE_WAIT_TIME } from '@/constants/define'
 
-import { useMarkdownTheme, useProvideTiptapStore } from '@/hooks'
+import { useBsTheme, useMarkdownTheme, useProvideTiptapStore } from '@/hooks'
 import { useLocale } from '@/locales'
-import { differenceBy, getCssUnitWithDefault, hasExtension, isBoolean, isEqual, throttle } from '@/utils/utils'
+import { differenceBy, getCssUnitWithDefault, hasExtension, isEqual, throttle } from '@/utils/utils'
 import BubbleMenu from './BubbleMenu.vue'
 import TipTapToolbar from './TiptapToolbar.vue'
 
@@ -41,7 +40,7 @@ interface Props {
 
 interface Emits {
   (event: 'enter'): void
-  (event: 'change', value: VuetifyTiptapOnChange): void
+  (event: 'change', value: BootstrapTiptapOnChange): void
   (event: 'update:modelValue', value: Props['modelValue']): void
   (event: 'update:markdownTheme', value: string): void
 }
@@ -82,7 +81,8 @@ const attrs = useAttrs()
 // external change that should overwrite the editor content.
 const lastEmittedValue = ref<Props['modelValue']>(props.modelValue)
 
-const theme = useTheme()
+const rootRef = ref<HTMLElement | null>(null)
+const { isDark, themeAttr } = useBsTheme(rootRef, () => props.dark)
 const { state, isFullscreen } = useProvideTiptapStore()
 const { markdownThemeStyle } = useMarkdownTheme(
   computed(() => props.markdownTheme),
@@ -135,14 +135,6 @@ const editor = useEditor({
 
 const { t } = useLocale()
 
-const isDark = computed<boolean>(() => {
-  if (isBoolean(props.dark))
-    return props.dark
-  if (isBoolean(theme.current.value.dark))
-    return theme.current.value.dark
-  return false
-})
-
 const contentDynamicClasses = computed(() => {
   const values: Record<string, any> = {
     __dark: unref(isDark),
@@ -152,6 +144,18 @@ const contentDynamicClasses = computed(() => {
   return [values, props.editorClass]
 })
 
+const hasError = computed<boolean>(() => {
+  const value = props.errorMessages
+  return Array.isArray(value) ? value.length > 0 : !!value
+})
+
+const errorList = computed<string[]>(() => {
+  const value = props.errorMessages
+  if (!value)
+    return []
+  return Array.isArray(value) ? value : [value]
+})
+
 const contentDynamicStyles = computed(() => {
   const maxWidth = getCssUnitWithDefault(props.maxWidth)
 
@@ -159,7 +163,7 @@ const contentDynamicStyles = computed(() => {
     maxWidth,
     width: !maxWidth ? undefined : '100%',
     margin: !maxWidth ? undefined : '0 auto',
-    backgroundColor: unref(isDark) ? '#121212' : '#FFFFFF',
+    backgroundColor: 'var(--bs-body-bg)',
   }
   if (unref(isFullscreen))
     return { height: '100%', overflowY: 'auto', ...maxHeightStyle }
@@ -224,73 +228,67 @@ defineExpose({ editor })
 
 <template>
   <Teleport to="body" :disabled="!isFullscreen">
-    <div v-if="editor" class="vuetify-pro-tiptap" :class="{ dense }">
-      <VThemeProvider :theme="isDark ? 'dark' : 'light'">
-        <VInput class="pt-0" hide-details="auto" :error-messages="errorMessages">
-          <VCard
-            :flat="flat"
-            :outlined="outlined"
-            :color="isDark ? 'grey-darken-4' : 'grey-lighten-4'"
-            v-bind="$attrs"
-            :style="{
-              borderColor: errorMessages ? '#ff5252' : undefined,
-              width: '100%',
-            }"
-            class="vuetify-pro-tiptap-editor"
-            :class="{ 'vuetify-pro-tiptap-editor--fullscreen': isFullscreen }"
-          >
-            <template v-if="label && !isFullscreen">
-              <VCardTitle :class="isDark ? 'bg-grey-darken-3' : 'bg-grey-lighten-3'">
-                {{ label }}
-              </VCardTitle>
+    <div
+      v-if="editor"
+      ref="rootRef"
+      class="bootstrap-pro-tiptap"
+      :class="{ dense }"
+      :data-bs-theme="themeAttr"
+    >
+      <div
+        v-bind="$attrs"
+        class="card bootstrap-pro-tiptap-editor"
+        :class="{
+          'bootstrap-pro-tiptap-editor--fullscreen': isFullscreen,
+          'bootstrap-pro-tiptap-editor--outlined': outlined,
+          'shadow-sm': !flat,
+          'border-danger': hasError,
+        }"
+      >
+        <div v-if="label && !isFullscreen" class="card-header fw-semibold">
+          {{ label }}
+        </div>
 
-              <VDivider />
-            </template>
-            <!-- Toolbar -->
-            <TipTapToolbar
-              v-if="!hideToolbar"
-              class="vuetify-pro-tiptap-editor__toolbar"
-              :editor="editor"
-            />
+        <!-- Toolbar -->
+        <TipTapToolbar
+          v-if="!hideToolbar"
+          class="bootstrap-pro-tiptap-editor__toolbar border-bottom"
+          :editor="editor"
+        />
 
-            <!-- Edit Mode -->
-            <BubbleMenu v-if="!hideBubble" :editor="editor" />
+        <!-- Edit Mode -->
+        <BubbleMenu v-if="!hideBubble" :editor="editor" />
 
-            <slot
-              name="editor"
-              v-bind="{ editor, props: { 'class': 'vuetify-pro-tiptap-editor__content', 'data-testid': 'value' } }"
-            >
-              <EditorContent
-                class="vuetify-pro-tiptap-editor__content"
-                :class="contentDynamicClasses"
-                :style="contentDynamicStyles"
-                :editor="editor"
-                data-testid="value"
-              />
-            </slot>
+        <slot
+          name="editor"
+          v-bind="{ editor, props: { 'class': 'bootstrap-pro-tiptap-editor__content', 'data-testid': 'value' } }"
+        >
+          <EditorContent
+            class="bootstrap-pro-tiptap-editor__content"
+            :class="contentDynamicClasses"
+            :style="contentDynamicStyles"
+            :editor="editor"
+            data-testid="value"
+          />
+        </slot>
 
-            <slot name="bottom" v-bind="{ editor }">
-              <VToolbar class="px-4" density="compact" flat>
-                <VSpacer />
+        <slot name="bottom" v-bind="{ editor }">
+          <div v-if="hasExtension(editor, 'characterCount')" class="card-footer d-flex justify-content-end gap-3 small text-body-secondary text-uppercase bootstrap-pro-tiptap-editor__footer">
+            <span>{{ editor.storage.characterCount.words() }} {{ t('editor.words') }}</span>
+            <span>{{ editor.storage.characterCount.characters() }} {{ t('editor.characters') }}</span>
+          </div>
+        </slot>
+      </div>
 
-                <template v-if="hasExtension(editor, 'characterCount')">
-                  <span class="text-overline me-4">
-                    {{ editor.storage.characterCount.words() }} {{ t('editor.words') }}
-                  </span>
-
-                  <span class="text-overline">
-                    {{ editor.storage.characterCount.characters() }} {{ t('editor.characters') }}
-                  </span>
-                </template>
-              </VToolbar>
-            </slot>
-          </VCard>
-        </VInput>
-      </VThemeProvider>
+      <div v-if="hasError" class="invalid-feedback d-block">
+        <div v-for="(message, i) in errorList" :key="i">
+          {{ message }}
+        </div>
+      </div>
     </div>
   </Teleport>
 </template>
 
 <style lang="scss">
-@forward '@/styles/index.scss';
+@forward '@/styles/index';
 </style>

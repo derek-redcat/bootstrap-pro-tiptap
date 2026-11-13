@@ -5,7 +5,6 @@ import type { ImageAttrsOptions, ImageTab, ImageTabKey } from '../../image/types
 
 import { ref } from 'vue'
 
-import OriginalThemeProvider from '../../OriginalThemeProvider.vue'
 import ActionButton from '../src/index.vue'
 import { extActionButtonProps } from '../src/props'
 
@@ -56,8 +55,6 @@ function onAction() {
     :tooltip="t('editor.image.tooltip')"
     icon="image"
   >
-    <OriginalThemeProvider>
-      <slot name="dialog" :props="{ editor, value: model, imageTabs, hiddenTabs, upload }" />
-    </OriginalThemeProvider>
+    <slot name="dialog" :props="{ editor, value: model, imageTabs, hiddenTabs, upload }" />
   </ActionButton>
 </template>

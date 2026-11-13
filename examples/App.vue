@@ -2,14 +2,14 @@
   * @Date: 2023-05-27 17:21:21
   * @LastEditors: yikoyu 2282373181@qq.com
   * @LastEditTime: 2023-09-09 21:36:31
-  * @FilePath: \vuetify-pro-tiptap\examples\App.vue
+  * @FilePath: \bootstrap-pro-tiptap\examples\App.vue
 -->
 <script setup lang="ts">
-import type { VuetifyTiptapOnChange } from 'vuetify-pro-tiptap'
+import type { BootstrapTiptapOnChange } from 'bootstrap-pro-tiptap'
+import { BaseKit, Heading, locale } from 'bootstrap-pro-tiptap'
+import { BAlert, BButton, BButtonGroup, BCard, BContainer, BModal } from 'bootstrap-vue-next'
 import JsonEditorVue from 'json-editor-vue'
 import { ref, unref } from 'vue'
-import { useTheme } from 'vuetify'
-import { BaseKit, Heading, locale } from 'vuetify-pro-tiptap'
 
 import CustomLang from './components/CustomLang.vue'
 import preview from './extensions/preview'
@@ -27,9 +27,12 @@ const extensions = [
   }),
 ]
 
-const theme = useTheme()
+const isDark = ref(false)
+const viewer = ref(false)
+const markdownThemes = ['', 'default', 'github', 'maidragon']
+const outputs = ['html', 'json', 'text'] as const
 
-const VuetifyTiptapRef = ref<null | Record<string, any>>(null)
+const BootstrapTiptapRef = ref<null | Record<string, any>>(null)
 const output = ref<'html' | 'json' | 'text'>('html')
 const content = ref(jsonValue)
 const markdownTheme = ref('')
@@ -48,7 +51,8 @@ const customLang = ref({ ...locale.message.en })
 // })
 
 function toggleTheme() {
-  theme.toggle()
+  isDark.value = !isDark.value
+  document.documentElement.setAttribute('data-bs-theme', isDark.value ? 'dark' : 'light')
 }
 
 function setCustom() {
@@ -56,7 +60,7 @@ function setCustom() {
   locale.setLang('custom')
 }
 
-function onChangeEditor({ editor, output }: VuetifyTiptapOnChange) {
+function onChangeEditor({ editor, output }: BootstrapTiptapOnChange) {
   console.log('output :>> ', output)
   console.log('output[html] :>> ', editor.getHTML())
   console.log('output[json] :>> ', editor.getJSON())
@@ -64,165 +68,127 @@ function onChangeEditor({ editor, output }: VuetifyTiptapOnChange) {
 }
 
 function getHTML() {
-  const value = VuetifyTiptapRef.value?.editor.getHTML()
+  const value = BootstrapTiptapRef.value?.editor.getHTML()
   console.log('getHTML :>> ', value)
 }
 
 function getJSON() {
-  const value = VuetifyTiptapRef.value?.editor.getJSON()
+  const value = BootstrapTiptapRef.value?.editor.getJSON()
   console.log('getJSON :>> ', value, JSON.stringify(value))
 }
 
 function getText() {
-  const value = VuetifyTiptapRef.value?.editor.getText()
+  const value = BootstrapTiptapRef.value?.editor.getText()
   console.log('getText :>> ', value)
 }
 </script>
 
 <template>
-  <VApp id="app">
-    <VContainer>
-      <VAlert class="mb-4" type="info" title="Support repository" variant="tonal">
-        <template #text>
-          <div class="d-flex align-center">
-            If you like the repository, you can give us
-            <iframe
-              class="ms-2"
-              src="https://ghbtns.com/github-btn.html?user=yikoyu&repo=vuetify-pro-tiptap&type=star&count=true"
-              frameborder="0"
-              scrolling="0"
-              width="120"
-              height="20"
-              title="GitHub"
-            />
-          </div>
-        </template>
-      </VAlert>
+  <BContainer id="app" class="py-4">
+    <BAlert class="mb-4" variant="info" :model-value="true">
+      Bootstrap fork of
+      <a href="https://github.com/yikoyu/vuetify-pro-tiptap" target="_blank" rel="noopener">vuetify-pro-tiptap</a>
+      by yikoyu.
+    </BAlert>
 
-      <VBtn class="mb-4" color="primary" @click="toggleTheme">
-        {{ $vuetify.theme.current.dark ? 'dark' : 'light' }}
-      </VBtn>
-
-      <VBtn class="mb-4 ms-4" color="primary" @click="locale.setLang('zhHans')">
+    <div class="d-flex flex-wrap gap-2 mb-3">
+      <BButton variant="primary" @click="toggleTheme">
+        {{ isDark ? 'dark' : 'light' }}
+      </BButton>
+      <BButton variant="primary" @click="locale.setLang('zhHans')">
         set Chinese
-      </VBtn>
-
-      <VBtn class="mb-4 ms-4" color="primary" @click="locale.setLang('en')">
+      </BButton>
+      <BButton variant="primary" @click="locale.setLang('en')">
         set English
-      </VBtn>
-
-      <VBtn class="mb-4 ms-4" color="primary" @click="setCustom">
+      </BButton>
+      <BButton variant="primary" @click="setCustom">
         set Custom Lang
-      </VBtn>
+      </BButton>
+    </div>
 
-      <div class="my-4">
-        <VBtn-toggle v-model="markdownTheme" color="deep-purple-accent-3" rounded="0" group>
-          <VBtn value="">
-            Global
-          </VBtn>
+    <BButtonGroup class="mb-3 me-3">
+      <BButton
+        v-for="theme in markdownThemes"
+        :key="theme"
+        variant="outline-secondary"
+        :pressed="markdownTheme === theme"
+        @click="markdownTheme = theme"
+      >
+        {{ theme || 'Global' }}
+      </BButton>
+    </BButtonGroup>
 
-          <VBtn value="default">
-            Default
-          </VBtn>
+    <BButtonGroup class="mb-3">
+      <BButton
+        v-for="item in outputs"
+        :key="item"
+        variant="outline-secondary"
+        :pressed="output === item"
+        @click="output = item"
+      >
+        {{ item }}
+      </BButton>
+    </BButtonGroup>
 
-          <VBtn value="github">
-            Github
-          </VBtn>
-
-          <VBtn value="maidragon">
-            Maidragon
-          </VBtn>
-        </VBtn-toggle>
-      </div>
-
-      <div class="my-4">
-        <VBtn-toggle v-model="output" color="deep-purple-accent-3" rounded="0" group>
-          <VBtn value="html">
-            Html
-          </VBtn>
-
-          <VBtn value="json">
-            Json
-          </VBtn>
-
-          <VBtn value="text">
-            Text
-          </VBtn>
-        </VBtn-toggle>
-      </div>
-
-      <VBtn class="mb-4" color="primary" @click="getHTML">
+    <div class="d-flex flex-wrap gap-2 mb-3">
+      <BButton variant="primary" @click="getHTML">
         getHTML
-      </VBtn>
-
-      <VBtn class="mb-4 ms-4" color="primary" @click="getJSON">
+      </BButton>
+      <BButton variant="primary" @click="getJSON">
         getJSON
-      </VBtn>
-
-      <VBtn class="mb-4 ms-4" color="primary" @click="getText">
+      </BButton>
+      <BButton variant="primary" @click="getText">
         getText
-      </VBtn>
+      </BButton>
+      <BButton variant="primary" @click="viewer = true">
+        Viewer
+      </BButton>
+    </div>
 
-      <div class="my-4">
-        <VDialog :width="maxWidth">
-          <template #activator="{ props }">
-            <VBtn v-bind="props" class="mb-4" color="primary" text="Viewer" />
-          </template>
+    <BModal v-model="viewer" size="xl" title="Viewer" no-footer>
+      <BootstrapViewer :value="content" />
+    </BModal>
 
-          <VCard>
-            <VCardText>
-              <VuetifyViewer :value="content" />
-            </VCardText>
-          </VCard>
-        </VDialog>
-      </div>
+    <BootstrapTiptap
+      ref="BootstrapTiptapRef"
+      v-model="content"
+      v-model:markdown-theme="markdownTheme"
+      label="Title"
+      :output="output"
+      :hide-toolbar="hideToolbar"
+      :disable-toolbar="disableToolbar"
+      :outlined="outlined"
+      :dense="dense"
+      :error-messages="errorMessages"
+      :max-height="465"
+      :max-width="maxWidth"
+      :extensions="extensions"
+      @change="onChangeEditor"
+    />
 
-      <VuetifyTiptap
-        ref="VuetifyTiptapRef"
-        v-model="content"
+    <hr class="my-4">
+
+    <JsonEditorVue v-model="content" read-only height="400px" />
+
+    <hr class="my-4">
+
+    <BCard no-body>
+      <BootstrapTiptap
         v-model:markdown-theme="markdownTheme"
-        label="Title"
-        :output="output"
-        :hide-toolbar="hideToolbar"
-        :disable-toolbar="disableToolbar"
+        label="Editor 2 (forced dark)"
         :outlined="outlined"
         :dense="dense"
-        :error-messages="errorMessages"
-        rounded
+        dark
         :max-height="465"
         :max-width="maxWidth"
         :extensions="extensions"
-        @change="onChangeEditor"
       />
+    </BCard>
 
-      <VDivider class="my-4" />
+    <hr class="my-4">
 
-      <JsonEditorVue v-model="content" read-only height="400px" />
-      <!-- <VTextarea :value="content" readonly auto-grow /> -->
-
-      <VDivider class="my-4" />
-
-      <VCard>
-        <VuetifyTiptap
-          v-model:markdown-theme="markdownTheme"
-          label="Editor 2"
-          :outlined="outlined"
-          :dense="dense"
-          rounded
-          dark
-          :max-height="465"
-          :max-width="maxWidth"
-          :extensions="extensions"
-        />
-      </VCard>
-
-      <VDivider class="my-4" />
-
-      <VDivider class="my-4" />
-
-      <CustomLang v-model="customLang" />
-    </VContainer>
-  </VApp>
+    <CustomLang v-model="customLang" />
+  </BContainer>
 </template>
 
 <style>

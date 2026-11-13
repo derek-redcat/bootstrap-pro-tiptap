@@ -14,6 +14,6 @@ defineProps(extActionButtonProps)
     :tooltip="t('editor.table.tooltip')"
     icon="table"
   >
-    <TableMenu :editor="editor" activator="parent" />
+    <TableMenu :editor="editor" />
   </ActionButton>
 </template>

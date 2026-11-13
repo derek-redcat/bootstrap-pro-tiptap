@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import type { ImageForm } from './types'
 
+import { BFormCheckbox, BFormGroup, BFormInput } from 'bootstrap-vue-next'
 import { computed } from 'vue'
-
-import { getIcon } from '@/constants/icons'
 
 interface Props {
   modelValue?: ImageForm
@@ -27,16 +26,17 @@ const form = computed({
 </script>
 
 <template>
-  <VForm>
-    <VTextField
-      v-model="form.src"
-      :label="t('editor.image.dialog.form.link')"
-      autofocus
-      :prepend-icon="getIcon('linkVariant')"
-    />
+  <div>
+    <BFormGroup :label="t('editor.image.dialog.form.link')" label-for="bpt-image-src" class="mb-3">
+      <BFormInput id="bpt-image-src" v-model="form.src" type="url" autofocus />
+    </BFormGroup>
 
-    <VTextField v-model="form.alt" :label="t('editor.image.dialog.form.alt')" :prepend-icon="getIcon('text')" />
+    <BFormGroup :label="t('editor.image.dialog.form.alt')" label-for="bpt-image-alt" class="mb-3">
+      <BFormInput id="bpt-image-alt" v-model="form.alt" />
+    </BFormGroup>
 
-    <VCheckbox v-model="form.lockAspectRatio" :label="t('editor.image.dialog.form.aspectRatio')" />
-  </VForm>
+    <BFormCheckbox v-model="form.lockAspectRatio">
+      {{ t('editor.image.dialog.form.aspectRatio') }}
+    </BFormCheckbox>
+  </div>
 </template>

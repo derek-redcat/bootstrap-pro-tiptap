@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { BButton, BFormInput, BInputGroup } from 'bootstrap-vue-next'
+import { computed, ref, watch } from 'vue'
 
+import Icon from '@/components/Icon.vue'
 import { COLORS_LIST } from '@/constants/define'
 import { getIcon } from '@/constants/icons'
+import ActivatorPopover from './ActivatorPopover.vue'
 
 interface Props {
   modelValue?: string
-  nudgeLeft?: string | number
-  nudgeTop?: string | number
-  more?: boolean
 }
 
 interface Emits {
@@ -18,82 +18,62 @@ interface Emits {
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: '',
-  nudgeLeft: 0,
-  nudgeTop: 0,
-  more: true,
 })
 
 const emit = defineEmits<Emits>()
 
-const inutValue = ref('')
+const inputValue = ref('')
 const menu = ref(false)
-// const picker = ref(false);
 
-watch(menu, (val) => {
-  inutValue.value = props.modelValue
+// <input type="color"> only accepts #rrggbb
+const nativeValue = computed(() => (/^#[0-9a-f]{6}$/i.test(inputValue.value) ? inputValue.value : '#000000'))
+
+watch(menu, () => {
+  inputValue.value = props.modelValue ?? ''
 })
 
 function setColor(color: string) {
+  if (!color)
+    return
+
   emit('update:modelValue', color)
   emit('change', color)
 
-  inutValue.value = color
+  inputValue.value = color
   menu.value = false
 }
 </script>
 
 <template>
-  <VMenu
-    v-model="menu"
-    :nudge-left="nudgeLeft || 255"
-    :nudge-top="nudgeTop || 42"
-    :close-on-content-click="false"
-    transition="scale-transition"
-    :origin="!nudgeLeft ? 'top right' : 'top left'"
-    activator="parent"
-  >
-    <VList>
-      <VSheet class="d-flex flex-wrap justify-between ma-1" fluid :max-width="230">
-        <VBtn v-for="color in COLORS_LIST" :key="color" flat icon density="compact" @click="setColor(color)">
-          <VIcon :icon="getIcon('circle')" :color="color" />
-        </VBtn>
-
-        <VTextField
-          v-model="inutValue"
-          class="mt-2 mx-1"
-          :append-inner-icon="getIcon('check')"
-          density="compact"
-          label="HEX"
-          variant="outlined"
-          flat
-          hide-details
-          single-line
-          clearable
-          @click:append-inner="setColor(inutValue)"
-        >
-          <template v-if="inutValue" #prepend-inner>
-            <VIcon class="opacity-100" :icon="getIcon('circle')" :color="inutValue" />
-          </template>
-        </VTextField>
-      </VSheet>
-
-      <!-- <template>
-        <VBtn v-if="!picker" block text @click="picker = true"> show more </VBtn>
-        <VBtn v-else block text @click="picker = false"> show less </VBtn>
-
-        <v-expand-transition>
-        <div v-if="picker" class="text-center">
-        <v-divider />
-        <v-color-picker
-        :model-value="modelValue"
-        hide-mode-switch
-        mode="hexa"
-        :width="254"
-        @update:color="onInput"
+  <ActivatorPopover v-model="menu" body-class="p-2">
+    <div class="bootstrap-pro-tiptap-color-picker">
+      <div class="bootstrap-pro-tiptap-color-picker__swatches">
+        <button
+          v-for="color in COLORS_LIST"
+          :key="color"
+          type="button"
+          class="bootstrap-pro-tiptap-color-picker__swatch"
+          :class="{ active: color.toLowerCase() === modelValue?.toLowerCase() }"
+          :style="{ backgroundColor: color }"
+          :title="color"
+          :aria-label="color"
+          @click="setColor(color)"
         />
-        </div>
-        </v-expand-transition>
-        </template> -->
-    </VList>
-  </VMenu>
+      </div>
+
+      <BInputGroup size="sm" class="mt-2">
+        <input
+          type="color"
+          class="form-control form-control-color"
+          :value="nativeValue"
+          aria-label="Custom color"
+          @input="inputValue = ($event.target as HTMLInputElement).value"
+        >
+        <BFormInput v-model="inputValue" placeholder="HEX" @keydown.enter.prevent="setColor(inputValue)" />
+        <BButton variant="outline-secondary" :disabled="!inputValue" @click="setColor(inputValue)">
+          <Icon :icon="getIcon('check')" size="1em" />
+        </BButton>
+      </BInputGroup>
+    </div>
+  </ActivatorPopover>
 </template>

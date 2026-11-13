@@ -1,11 +1,104 @@
 $white-color: #fff;
-$primary-color: rgb(var(--v-theme-primary, 24, 103, 192));
+$primary-color: var(--bs-primary, #0d6efd);
 
 :root {
-  --vp-theme-primary: #{$primary-color};
+  --bpt-theme-primary: #{$primary-color};
 }
 
-.vuetify-pro-tiptap {
+.bootstrap-pro-tiptap-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.bootstrap-pro-tiptap-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 4px;
+  align-items: center;
+  padding: 4px 8px;
+
+  .vr {
+    align-self: stretch;
+    margin-block: 4px;
+  }
+}
+
+.bootstrap-pro-tiptap-action {
+  display: inline-flex;
+  margin-inline-end: 2px;
+
+  &__btn.btn {
+    --bs-btn-padding-x: 0.3rem;
+    --bs-btn-padding-y: 0.3rem;
+    --bs-btn-color: var(--bs-body-color);
+    --bs-btn-hover-color: var(--bs-body-color);
+    --bs-btn-hover-bg: var(--bs-tertiary-bg);
+    --bs-btn-active-color: var(--bs-emphasis-color);
+    --bs-btn-active-bg: var(--bs-secondary-bg);
+    --bs-btn-disabled-color: var(--bs-secondary-color);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    text-decoration: none;
+    border: 0;
+
+    &:hover {
+      background-color: var(--bs-btn-hover-bg);
+    }
+
+    &.active {
+      color: var(--bs-btn-active-color);
+      background-color: var(--bs-btn-active-bg);
+    }
+  }
+}
+
+.bootstrap-pro-tiptap-popover {
+  --bs-popover-max-width: 320px;
+}
+
+.bootstrap-pro-tiptap-menu {
+  min-width: 180px;
+
+  .list-group-item {
+    white-space: nowrap;
+  }
+}
+
+.bootstrap-pro-tiptap-color-picker {
+  width: 232px;
+
+  &__swatches {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 4px;
+  }
+
+  &__swatch {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    cursor: pointer;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 50%;
+
+    &:hover,
+    &.active {
+      outline: 2px solid $primary-color;
+      outline-offset: 1px;
+    }
+  }
+
+  .form-control-color {
+    flex: 0 0 auto;
+    width: 2.5rem;
+  }
+}
+
+.bootstrap-pro-tiptap {
   overflow-wrap: anywhere;
 
   &-editor {
@@ -14,10 +107,16 @@ $primary-color: rgb(var(--v-theme-primary, 24, 103, 192));
     width: 100%;
     max-height: 100%;
 
+    &:not(.bootstrap-pro-tiptap-editor--outlined) {
+      border: 0;
+    }
+
     &--fullscreen {
       position: fixed !important;
       inset: 0 !important;
-      z-index: 200;
+
+      // above Bootstrap fixed/sticky navbars (1030), below modals (1050+)
+      z-index: 1040;
       width: 100% !important;
       height: 100% !important;
       margin: 0 !important;
@@ -29,20 +128,8 @@ $primary-color: rgb(var(--v-theme-primary, 24, 103, 192));
     }
 
     &__menu-bubble {
-      .v-toolbar__content {
-        padding: 0;
-      }
-    }
-
-    &__toolbar {
-      .v-toolbar__content {
-        flex-wrap: wrap;
-        row-gap: 4px;
-        padding: 4px 12px;
-
-        .v-divider--vertical {
-          height: inherit;
-        }
+      .bootstrap-pro-tiptap-toolbar {
+        padding: 2px 4px;
       }
     }
 
@@ -106,6 +193,7 @@ $primary-color: rgb(var(--v-theme-primary, 24, 103, 192));
     min-height: 180px;
     padding: 8px 18px;
     overflow-wrap: anywhere;
+    outline: none;
 
     &.resize-cursor {
       cursor: ew-resize;
@@ -298,4 +386,8 @@ $primary-color: rgb(var(--v-theme-primary, 24, 103, 192));
       line-height: 1.2rem;
     }
   }
+}
+
+html.bootstrap-pro-tiptap-noscroll {
+  overflow: hidden !important;
 }

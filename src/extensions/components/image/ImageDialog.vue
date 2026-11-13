@@ -2,8 +2,9 @@
 import type { Editor } from '@tiptap/vue-3'
 import type { ImageAttrsOptions, ImageForm, ImageTab, ImageTabKey } from './types'
 
+import { BButton, BModal, BTab, BTabs } from 'bootstrap-vue-next'
 import { computed, ref, unref, watch } from 'vue'
-import { getIcon } from '@/constants/icons'
+import { useActivator } from '@/hooks/use-activator'
 import { useLocale } from '@/locales'
 
 import ImageUpload from './ImageUpload.vue'
@@ -30,7 +31,11 @@ const { t } = useLocale()
 
 const dialog = ref<boolean>(false)
 
-const tab = ref<boolean>(false)
+useActivator()?.onActivate(() => {
+  dialog.value = true
+})
+
+const tab = ref<number>(0)
 const form = ref<ImageForm>({})
 
 const defaultImageTabs = computed<ImageTab[]>(() => {
@@ -101,37 +106,17 @@ watch(
 </script>
 
 <template>
-  <VDialog v-model="dialog" max-width="400" activator="parent" @click:outside="close">
-    <VCard>
-      <VToolbar class="px-6" density="compact">
-        <span class="headline">{{ t('editor.image.dialog.title') }}</span>
+  <BModal v-model="dialog" lazy :title="t('editor.image.dialog.title')" centered @hidden="close">
+    <BTabs v-model:index="tab" content-class="pt-3">
+      <BTab v-for="(imageTab, i) in defaultImageTabs" :key="i" :title="imageTab.name">
+        <component :is="imageTab.component" v-model="form" :upload="upload" :t="t" />
+      </BTab>
+    </BTabs>
 
-        <VSpacer />
-
-        <VBtn class="mx-0" icon @click="close">
-          <VIcon :icon="getIcon('close')" />
-        </VBtn>
-      </VToolbar>
-
-      <VTabs v-model="tab">
-        <VTab v-for="(imageTab, i) in defaultImageTabs" :key="i" :value="i">
-          {{ imageTab.name }}
-        </VTab>
-      </VTabs>
-
-      <VCardText>
-        <VWindow v-model="tab">
-          <VWindowItem v-for="(imageTab, i) in defaultImageTabs" :key="i" :value="i">
-            <component :is="imageTab.component" v-model="form" :upload="upload" :t="t" />
-          </VWindowItem>
-        </VWindow>
-      </VCardText>
-
-      <VCardActions>
-        <VBtn :disabled="disabledApply" @click="apply">
-          {{ t('editor.image.dialog.button.apply') }}
-        </VBtn>
-      </VCardActions>
-    </VCard>
-  </VDialog>
+    <template #footer>
+      <BButton variant="primary" :disabled="disabledApply" @click="apply">
+        {{ t('editor.image.dialog.button.apply') }}
+      </BButton>
+    </template>
+  </BModal>
 </template>

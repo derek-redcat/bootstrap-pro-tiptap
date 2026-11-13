@@ -40,11 +40,11 @@ function onAction(_useWindow: boolean = false) {
   toggleFullscreen()
 
   if (state.isFullscreen) {
-    document.documentElement.classList.add('overflow-y-hidden')
+    document.documentElement.classList.add('bootstrap-pro-tiptap-noscroll')
     _useWindow && enter()
   }
   else {
-    document.documentElement.classList.remove('overflow-y-hidden')
+    document.documentElement.classList.remove('bootstrap-pro-tiptap-noscroll')
     _useWindow && exit()
   }
 }

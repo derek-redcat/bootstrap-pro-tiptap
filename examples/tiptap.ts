@@ -1,14 +1,15 @@
-import { markRaw } from 'vue'
 import {
   BaseKit,
   Blockquote,
   Bold,
+  BootstrapTiptap,
+  BootstrapViewer,
   BulletList,
   Clear,
   Code,
   CodeBlock,
   Color,
-  createVuetifyProTipTap,
+  createBootstrapProTipTap,
   defaultBubbleList,
   FontFamily,
   FontSize,
@@ -30,27 +31,26 @@ import {
   TextAlign,
   Underline,
   Video,
-  VuetifyTiptap,
-  VuetifyViewer,
-} from 'vuetify-pro-tiptap'
+} from 'bootstrap-pro-tiptap'
+import { markRaw } from 'vue'
 import { NODE_TYPE_MENU } from '@/constants/define'
 import LinkDialog from './components/LinkDialog.vue'
 
 import SelectImage from './components/SelectImage.vue'
-import 'vuetify-pro-tiptap/styles/editor.css'
+import 'bootstrap-pro-tiptap/styles/editor.css'
 
-import 'vuetify-pro-tiptap/styles/markdown.css'
+import 'bootstrap-pro-tiptap/styles/markdown.css'
 import './styles/markdown/github.scss'
 
 import './styles/markdown/maidragon.scss'
 
-export const vuetifyProTipTap = createVuetifyProTipTap({
+export const bootstrapProTipTap = createBootstrapProTipTap({
   lang: 'zhHans',
   fallbackLang: 'en',
   markdownTheme: 'github',
   components: {
-    VuetifyTiptap,
-    VuetifyViewer,
+    BootstrapTiptap,
+    BootstrapViewer,
   },
   extensions: [
     BaseKit.configure({

@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { Editor } from '@tiptap/vue-3'
+import { BButton, BFormGroup, BFormInput, BModal } from 'bootstrap-vue-next'
 import { computed, ref, unref, watchEffect } from 'vue'
 
-import { getIcon } from '@/constants/icons'
+import { useActivator } from '@/hooks/use-activator'
 import { useLocale } from '@/locales'
 
 interface Props {
@@ -21,6 +22,10 @@ const { t } = useLocale()
 const url = ref<string>('')
 
 const dialog = ref<boolean>(false)
+
+useActivator()?.onActivate(() => {
+  dialog.value = true
+})
 
 const isDisabled = computed(() => {
   if (props.value === url.value)
@@ -52,27 +57,15 @@ watchEffect(() => {
 </script>
 
 <template>
-  <VDialog v-model="dialog" max-width="400" activator="parent" @click:outside="close">
-    <VCard>
-      <VToolbar class="px-6" density="compact">
-        <span class="headline">{{ t('editor.video.dialog.title') }}</span>
+  <BModal v-model="dialog" lazy :title="t('editor.video.dialog.title')" centered @hidden="close">
+    <BFormGroup :label="t('editor.video.dialog.link')" label-for="bpt-video-url">
+      <BFormInput id="bpt-video-url" v-model="url" type="url" autofocus @keydown.enter.prevent="!isDisabled && apply()" />
+    </BFormGroup>
 
-        <VSpacer />
-
-        <VBtn class="mx-0" icon @click="close">
-          <VIcon :icon="getIcon('close')" />
-        </VBtn>
-      </VToolbar>
-
-      <VCardText>
-        <VTextField v-model="url" :label="t('editor.video.dialog.link')" hide-details autofocus />
-      </VCardText>
-
-      <VCardActions>
-        <VBtn :disabled="isDisabled" @click="apply">
-          {{ t('editor.video.dialog.button.apply') }}
-        </VBtn>
-      </VCardActions>
-    </VCard>
-  </VDialog>
+    <template #footer>
+      <BButton variant="primary" :disabled="isDisabled" @click="apply">
+        {{ t('editor.video.dialog.button.apply') }}
+      </BButton>
+    </template>
+  </BModal>
 </template>

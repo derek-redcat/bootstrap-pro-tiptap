@@ -1,46 +1,42 @@
-# Vuetify Pro Tiptap
+# Bootstrap Pro Tiptap
 
-A WYSIWYG rich-text editor using [tiptap](https://github.com/scrumpy/tiptap) and [vuetify](https://github.com/vuetifyjs/vuetify) for Vue.js
+A WYSIWYG rich-text editor using [tiptap](https://github.com/ueberdosis/tiptap) and [bootstrap-vue-next](https://github.com/bootstrap-vue-next/bootstrap-vue-next) (Bootstrap 5.3) for Vue 3.
 
-[![download](https://img.shields.io/npm/dm/vuetify-pro-tiptap.svg)](https://npmcharts.com/compare/vuetify-pro-tiptap?minimal=true)
-[![version](https://img.shields.io/npm/v/vuetify-pro-tiptap.svg)](https://www.npmjs.org/package/vuetify-pro-tiptap)
-[![gzip](https://img.badgesize.io/https://unpkg.com/vuetify-pro-tiptap/lib/vuetify-pro-tiptap.js?compression=gzip&label=gzip)](https://img.badgesize.io/https://unpkg.com/vuetify-pro-tiptap/lib/vuetify-pro-tiptap.js?compression=gzip&label=gzip)
-[![Test](https://github.com/yikoyu/vuetify-pro-tiptap/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/yikoyu/vuetify-pro-tiptap/actions/workflows/test.yml)
-![LICENSE](https://img.shields.io/badge/License-MIT-yellow.svg)
-[![semantic-release: vue](https://img.shields.io/badge/semantic--release-vue-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
-[![pkg.pr.new](https://pkg.pr.new/badge/yikoyu/vuetify-pro-tiptap)](https://pkg.pr.new/~/yikoyu/vuetify-pro-tiptap)
-
-English | [中文](./README.zh-CN.md)
-
-## Demo
-👉[https://yikoyu.github.io/vuetify-pro-tiptap/master/](https://yikoyu.github.io/vuetify-pro-tiptap/master/)
-
-👉[https://yikoyu.github.io/vuetify-pro-tiptap/develop/](https://yikoyu.github.io/vuetify-pro-tiptap/develop/)
-
-👾[Stackblitz](https://stackblitz.com/~/github.com/yikoyu/vuetify-pro-tiptap-demo/tree/main)
-
-👾[Nuxt3 Stackblitz](https://stackblitz.com/~/github.com/yikoyu/vuetify-pro-tiptap-demo/tree/nuxt)
+> This is a fork of [yikoyu/vuetify-pro-tiptap](https://github.com/yikoyu/vuetify-pro-tiptap) (branch `2.8.x`) with Vuetify replaced by Bootstrap. All credit for the editor, extensions and i18n goes to the original author.
 
 ## Features
-- Use [vuetify](https://github.com/vuetifyjs/vuetify) components
-- Many out of box [extension](#extensions) (welcome to submit an issue for feature request)
+- Uses [bootstrap-vue-next](https://bootstrap-vue-next.github.io/bootstrap-vue-next/) components (no Vuetify)
+- Follows Bootstrap 5.3 color modes (`data-bs-theme="dark"`)
+- Many out of box [extension](#extensions)
 - Markdown support
 - TypeScript support
 - I18n support(`en`, `zhHans`, `nl`, `tr`, `de`, `fr`, `it`, `pt`, `hu`)
-- Vuetify 3.x and Vue 3.x support
 
-## Vuetify 2.x
-For Vuetify 2.x please use the latest version of [vuetify-pro-tiptap@1.X.X](https://github.com/yikoyu/vuetify-pro-tiptap/tree/1.x)
+## Differences from vuetify-pro-tiptap
+
+| vuetify-pro-tiptap | bootstrap-pro-tiptap |
+| ---- | ---- |
+| `VuetifyTiptap`, `VuetifyViewer` | `BootstrapTiptap`, `BootstrapViewer` |
+| `createVuetifyProTipTap` | `createBootstrapProTipTap` |
+| `VuetifyTiptapOnChange` | `BootstrapTiptapOnChange` |
+| CSS classes `vuetify-pro-tiptap*` | `bootstrap-pro-tiptap*` |
+| Theme from Vuetify `useTheme()` | Nearest ancestor `[data-bs-theme]`, or the `dark` prop |
+| Custom dialogs use `activator="parent"` | Custom dialogs call `useActivator()` (see [Custom extensions](#custom-extensions)) |
+| Icons rendered with `VIcon` | Icons rendered as inline SVG (`Icon` component, accepts `@mdi/js` paths) |
 
 ## Installation
-### NPM
+### From git
+
 ```shell
-pnpm add vuetify-pro-tiptap
-# or
-yarn add vuetify-pro-tiptap
-# or
-npm i vuetify-pro-tiptap -S
+pnpm add github:derek-redcat/bootstrap-pro-tiptap#bootstrap bootstrap bootstrap-vue-next
 ```
+
+> `lib/` is build output and is not committed. Installing from git requires either committing a build or adding a `prepare` build script; publishing to a (private) registry is the simplest option.
+
+### Peer dependencies
+- `vue` ^3.5
+- `bootstrap` ^5.3 (you import its CSS)
+- `bootstrap-vue-next` ^1.2
 
 ### Install plugin
 
@@ -49,17 +45,17 @@ npm i vuetify-pro-tiptap -S
 
 ```TypeScript
 import { markRaw } from 'vue'
-import { VuetifyTiptap, VuetifyViewer, createVuetifyProTipTap } from 'vuetify-pro-tiptap'
-import { BaseKit, Bold, Italic, Underline, Strike, Color, Highlight, Heading, TextAlign, FontFamily, FontSize, SubAndSuperScript, BulletList, OrderedList, TaskList, Indent, Link, Image, Video, Table, Blockquote, HorizontalRule, Code, CodeBlock, Clear, Fullscreen, History } from 'vuetify-pro-tiptap'
-import 'vuetify-pro-tiptap/style.css'
+import { BootstrapTiptap, BootstrapViewer, createBootstrapProTipTap } from 'bootstrap-pro-tiptap'
+import { BaseKit, Bold, Italic, Underline, Strike, Color, Highlight, Heading, TextAlign, FontFamily, FontSize, SubAndSuperScript, BulletList, OrderedList, TaskList, Indent, Link, Image, Video, Table, Blockquote, HorizontalRule, Code, CodeBlock, Clear, Fullscreen, History } from 'bootstrap-pro-tiptap'
+import 'bootstrap-pro-tiptap/style.css'
 import SelectImage from './components/SelectImage.vue'
 
-export const vuetifyProTipTap = createVuetifyProTipTap({
+export const bootstrapProTipTap = createBootstrapProTipTap({
   lang: 'zhHans',
   fallbackLang: 'en',
   components: {
-    VuetifyTiptap,
-    VuetifyViewer
+    BootstrapTiptap,
+    BootstrapViewer
   },
   extensions: [
     BaseKit.configure({
@@ -111,23 +107,17 @@ export const vuetifyProTipTap = createVuetifyProTipTap({
 <summary>main.ts</summary>
 
 ```typescript
+import { createBootstrap } from 'bootstrap-vue-next'
 import { createApp } from 'vue'
-import { createVuetify } from 'vuetify'
 import App from './App.vue'
-import { vuetifyProTipTap } from './tiptap'
+import { bootstrapProTipTap } from './tiptap'
 
-import 'vuetify/styles'
-
-const vuetify = createVuetify()
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
 
 const app = createApp(App)
-app.use(vuetify)
-app.use(vuetifyProTipTap)
-
-// fix warning injected property "decorationClasses" is a ref and will be auto-unwrapped
-// https://github.com/ueberdosis/tiptap/issues/1719
-app.config.unwrapInjectedRef = true
-
+app.use(createBootstrap())
+app.use(bootstrapProTipTap)
 app.mount('#app')
 ```
 
@@ -136,12 +126,12 @@ app.mount('#app')
 ## Global Settings
 ```TypeScript
 import { markRaw } from 'vue'
-import { VuetifyTiptap, VuetifyViewer, createVuetifyProTipTap, defaultBubbleList } from 'vuetify-pro-tiptap'
-import { BaseKit, Image, Fullscreen } from 'vuetify-pro-tiptap'
-import 'vuetify-pro-tiptap/style.css'
+import { BootstrapTiptap, BootstrapViewer, createBootstrapProTipTap, defaultBubbleList } from 'bootstrap-pro-tiptap'
+import { BaseKit, Image, Fullscreen } from 'bootstrap-pro-tiptap'
+import 'bootstrap-pro-tiptap/style.css'
 import SelectImage from './components/SelectImage.vue'
 
-export const vuetifyProTipTap = createVuetifyProTipTap({
+export const bootstrapProTipTap = createBootstrapProTipTap({
   // Set default lang
   lang: 'zhHans',
   // Set default fallback lang
@@ -150,8 +140,8 @@ export const vuetifyProTipTap = createVuetifyProTipTap({
   markdownTheme: 'github',
   // Global registration app.component
   components: {
-    VuetifyTiptap,
-    VuetifyViewer
+    BootstrapTiptap,
+    BootstrapViewer
   },
   // Global registration extensions
   extensions: [
@@ -236,7 +226,7 @@ Create github.scss
 ```scss
 $value: 'github';
 
-.vuetify-pro-tiptap-editor__content.markdown-theme-#{$value} {
+.bootstrap-pro-tiptap-editor__content.markdown-theme-#{$value} {
   &.__dark {
     // your dark mode custom styles
   }
@@ -251,8 +241,8 @@ $value: 'github';
 Import github.scss in ts
 
 ```typescript
-// import 'vuetify-pro-tiptap/style.css' // import all(editor and markdown) styles
-import 'vuetify-pro-tiptap/styles/editor.css' // only use editor style, not using markdown style
+// import 'bootstrap-pro-tiptap/style.css' // import all(editor and markdown) styles
+import 'bootstrap-pro-tiptap/styles/editor.css' // only use editor style, not using markdown style
 import './styles/markdown/github.scss'
 ```
 
@@ -260,8 +250,8 @@ In the component using
 
 ```vue
 <template>
-  <VuetifyTiptap v-model="content" markdown-theme="github" />
-  <VuetifyViewer :value="content" markdown-theme="github" />
+  <BootstrapTiptap v-model="content" markdown-theme="github" />
+  <BootstrapViewer :value="content" markdown-theme="github" />
 </template>
 ```
 
@@ -273,42 +263,52 @@ In the component using
 ```vue
 <script setup lang="ts">
 import type { Editor } from '@tiptap/vue-3'
-import { mdiClose, mdiFileCodeOutline } from '@mdi/js'
+import { mdiFileCodeOutline } from '@mdi/js'
+import { ActionButton, BootstrapViewer, Icon } from 'bootstrap-pro-tiptap'
+import { BModal } from 'bootstrap-vue-next'
 import { ref } from 'vue'
-import { ActionButton } from 'vuetify-pro-tiptap'
 
-const props = withDefaults(defineProps<{
-  editor: Editor
-  tooltip?: string
-  disabled?: boolean
-}>(), {
-  tooltip: undefined,
-  disabled: false
-})
+withDefaults(defineProps<{ editor: Editor, disabled?: boolean }>(), { disabled: false })
 
 const dialog = ref(false)
-const maxWidth = ref<number>(900)
 </script>
 
 <template>
-  <ActionButton :editor="editor" tooltip="全屏" :disabled="disabled">
-    <VIcon>{{ `svg:${mdiFileCodeOutline}` }}</VIcon>
-    <VDialog v-model="dialog" fullscreen hide-overlay activator="parent">
-      <VCard>
-        <VToolbar dark color="primary">
-          <VBtn icon dark @click="dialog = false">
-            <VIcon>{{ `svg:${mdiClose}` }}</VIcon>
-          </VBtn>
-        </VToolbar>
+  <ActionButton :editor="editor" tooltip="Preview" :disabled="disabled" :action="() => (dialog = true)">
+    <template #icon>
+      <Icon :icon="mdiFileCodeOutline" />
+    </template>
 
-        <VContainer>
-          <VSheet class="mx-auto" :max-width="maxWidth">
-            <VuetifyViewer :value="editor.getHTML()" />
-          </VSheet>
-        </VContainer>
-      </VCard>
-    </VDialog>
+    <BModal v-model="dialog" fullscreen title="Preview" no-footer>
+      <BootstrapViewer :value="editor.getHTML()" />
+    </BModal>
   </ActionButton>
+</template>
+```
+
+</details>
+
+<details>
+<summary>Custom dialog component (e.g. <code>Link.configure({ dialogComponent: () => MyLinkDialog })</code>)</summary>
+
+Dialog components are rendered inside the toolbar button. Call `useActivator()` to open when the button is clicked (this replaces Vuetify's `activator="parent"`):
+
+```vue
+<script setup lang="ts">
+import { useActivator } from 'bootstrap-pro-tiptap'
+import { BModal } from 'bootstrap-vue-next'
+import { ref } from 'vue'
+
+const dialog = ref(false)
+useActivator()?.onActivate(() => {
+  dialog.value = true
+})
+</script>
+
+<template>
+  <BModal v-model="dialog" title="Insert link">
+    ...
+  </BModal>
 </template>
 ```
 
@@ -318,7 +318,7 @@ const maxWidth = ref<number>(900)
 <summary>preview.ts</summary>
 
 ```typescript
-import type { GeneralOptions } from 'vuetify-pro-tiptap'
+import type { GeneralOptions } from 'bootstrap-pro-tiptap'
 import { Extension } from '@tiptap/core'
 
 import PreviewActionButton from '../components/PreviewActionButton.vue'
@@ -349,16 +349,16 @@ export default Extension.create<PreviewOptions>({
 ### Setting language
 You can declare when you install the plugin.
 ```TypeScript
-import { createVuetifyProTipTap } from 'vuetify-pro-tiptap'
+import { createBootstrapProTipTap } from 'bootstrap-pro-tiptap'
 
-const VuetifyProTipTap = createVuetifyProTipTap({
+const BootstrapProTipTap = createBootstrapProTipTap({
   lang: 'zhHans',
   fallbackLang: 'en'
 })
 ```
 Or use `setLang` dynamic change
 ```TypeScript
-import { locale } from 'vuetify-pro-tiptap'
+import { locale } from 'bootstrap-pro-tiptap'
 
 locale.setLang('en')
 ```
@@ -376,7 +376,7 @@ Available languages:
 ### Use unavailable language
 Loading unavailable language, use `setMessage` for Settings
 ```TypeScript
-import { locale } from 'vuetify-pro-tiptap'
+import { locale } from 'bootstrap-pro-tiptap'
 
 locale.setMessage('zhHant', {
   // i18n text
@@ -387,9 +387,9 @@ locale.setLang('zhHant')
 ## Usage
 ```vue
 <script setup lang="ts">
+import { BaseKit, Bold, BootstrapTiptap, BootstrapViewer, Color, Fullscreen, Heading, Highlight, History, Image, Italic, Link, Strike, Table, Underline, Video } from 'bootstrap-pro-tiptap'
 import { ref } from 'vue'
-import { BaseKit, Bold, Color, Fullscreen, Heading, Highlight, History, Image, Italic, Link, Strike, Table, Underline, Video, VuetifyTiptap, VuetifyViewer } from 'vuetify-pro-tiptap'
-import 'vuetify-pro-tiptap/style.css'
+import 'bootstrap-pro-tiptap/style.css'
 
 const extensions = [
   BaseKit.configure({
@@ -418,8 +418,8 @@ const content = ref('')
 <template>
   <VApp id="app">
     <VContainer>
-      <VuetifyTiptap v-model="content" label="Title" rounded :min-height="200" :max-height="465" :max-width="900" :extensions="extensions" />
-      <VuetifyViewer :value="content" />
+      <BootstrapTiptap v-model="content" label="Title" rounded :min-height="200" :max-height="465" :max-width="900" :extensions="extensions" />
+      <BootstrapViewer :value="content" />
     </VContainer>
   </VApp>
 </template>
@@ -427,7 +427,7 @@ const content = ref('')
 
 ## Props
 
-### VuetifyTiptap
+### BootstrapTiptap
 
 #### Props
 | Name | Type | Default | Description |
@@ -435,10 +435,10 @@ const content = ref('')
 | modelValue | string \| JSONContent | '' | The input’s value |
 | markdownTheme | string \| false | 'default' | Markdown theme |
 | output | 'html' \| 'json' \| 'text' | 'html' | Output format |
-| dark | boolean | false | Applies the dark theme variant to the component. |
+| dark | boolean | undefined | Force dark (`true`) or light (`false`); otherwise inherits the nearest `[data-bs-theme]`. |
 | dense | boolean | false | Reduces the input height |
 | outlined | boolean | true | Applies the outlined style to the input |
-| flat | boolean | true | Removes the card’s elevation |
+| flat | boolean | true | Removes the card’s shadow |
 | disabled | boolean | false | Disable the input |
 | label | string | undefined | Sets input label |
 | hideToolbar | boolean | false | Hidden the toolbar |
@@ -450,6 +450,7 @@ const content = ref('')
 | maxHeight | string \| number | undefined | Sets the maximum height for the component. |
 | extensions | AnyExtension[] | [] | Tiptap the extensions |
 | editorClass | string \| string[] \| Record\<string, any> | undefined | Editor class |
+| errorMessages | string \| string[] \| null | [] | Validation messages shown below the editor (adds `border-danger`) |
 
 #### Slots
 | Name | Description |
@@ -465,13 +466,13 @@ const content = ref('')
 | change | { editor: Editor, output: string \| JSONContent } | Emitted when editor onUpdate |
 | enter | | Keyboard enter return |
 
-### VuetifyViewer
+### BootstrapViewer
 
 #### Props
 | Name | Type | Default | Description |
 | ---- | ---- | ---- | ---- |
 | value | string \| JSONContent | '' | The preview’s value |
-| dark | boolean | false | Applies the dark theme variant to the component. |
+| dark | boolean | undefined | Force dark (`true`) or light (`false`); otherwise inherits the nearest `[data-bs-theme]`. |
 | dense | boolean | false | Reduces the input height |
 | markdownTheme | string \| false | 'default' | Markdown theme |
 | xss | boolean | true | Enable xss filter |
@@ -500,6 +501,7 @@ const content = ref('')
 
 ## Thanks
 
-- [vuetify](https://github.com/vuetifyjs/vuetify)
+- [vuetify-pro-tiptap](https://github.com/yikoyu/vuetify-pro-tiptap) by yikoyu (upstream)
+- [bootstrap-vue-next](https://github.com/bootstrap-vue-next/bootstrap-vue-next)
 - [tiptap](https://github.com/scrumpy/tiptap)
 - [element-tiptap](https://github.com/Leecason/element-tiptap)

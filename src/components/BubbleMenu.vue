@@ -76,26 +76,24 @@ function getMenus(nodeKey?: NodeTypeKey): BubbleMenuItem[] {
 
 <template>
   <BubbleMenu :editor="editor">
-    <VCard class="vuetify-pro-tiptap-editor__menu-bubble">
-      <VCardText class="d-flex pa-0">
-        <VToolbar density="compact" flat height="auto" class="py-1 ps-1">
-          <template v-for="(item, key) in getMenus(nodeType)" :key="key">
-            <!-- Divider -->
-            <VDivider v-if="item.type === 'divider'" vertical class="mx-1 me-2" />
-            <!-- Buttons -->
-            <component
-              :is="item.component"
-              v-else
-              v-bind="item.componentProps"
-              :editor="editor"
-            >
-              <template v-for="(element, slotName, i) in item.componentSlots" :key="i" #[`${slotName}`]="values">
-                <component :is="element" v-bind="values?.props" />
-              </template>
-            </component>
-          </template>
-        </VToolbar>
-      </VCardText>
-    </VCard>
+    <div class="card shadow-sm bootstrap-pro-tiptap-editor__menu-bubble">
+      <div class="bootstrap-pro-tiptap-toolbar">
+        <template v-for="(item, key) in getMenus(nodeType)" :key="key">
+          <!-- Divider -->
+          <div v-if="item.type === 'divider'" class="vr mx-1" />
+          <!-- Buttons -->
+          <component
+            :is="item.component"
+            v-else
+            v-bind="item.componentProps"
+            :editor="editor"
+          >
+            <template v-for="(element, slotName, i) in item.componentSlots" :key="i" #[`${slotName}`]="values">
+              <component :is="element" v-bind="values?.props" />
+            </template>
+          </component>
+        </template>
+      </div>
+    </div>
   </BubbleMenu>
 </template>

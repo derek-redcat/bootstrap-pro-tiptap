@@ -11,7 +11,7 @@
       "@/*": ["./src/*"]
     },
     "resolveJsonModule": true,
-    "types": ["vite/client", "vuetify"],
+    "types": ["vite/client"],
     "strict": true,
     "sourceMap": true,
     "esModuleInterop": true,

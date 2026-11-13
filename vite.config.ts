@@ -5,8 +5,6 @@ import { resolve } from 'node:path'
 import vue from '@vitejs/plugin-vue'
 import { PluginPure } from 'rollup-plugin-pure'
 import * as sass from 'sass'
-import { Vuetify3Resolver } from 'unplugin-vue-components/resolvers'
-import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
@@ -14,11 +12,6 @@ import dts from 'vite-plugin-dts'
 export default defineConfig({
   plugins: [
     vue(),
-    Components({
-      dirs: undefined,
-      dts: 'types/components.d.ts',
-      resolvers: [Vuetify3Resolver()],
-    }),
     PluginPure({
       functions: ['Mark.create', 'Extension.create', 'Node.create'],
     }) as PluginOption,
@@ -65,7 +58,7 @@ export default defineConfig({
     } as PluginOption,
   ],
   optimizeDeps: {
-    include: ['vue', 'vuetify'],
+    include: ['vue', 'bootstrap-vue-next'],
   },
   resolve: {
     alias: {
@@ -76,18 +69,17 @@ export default defineConfig({
     outDir: 'lib',
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: 'VuetifyProTiptap',
+      name: 'BootstrapProTiptap',
     },
     rollupOptions: {
       output: {
         exports: 'named',
         globals: {
           'vue': 'Vue',
-          'vuetify': 'Vuetify',
-          'vuetify/components': 'VuetifyComp',
+          'bootstrap-vue-next': 'BootstrapVueNext',
         },
       },
-      external: ['vue', 'vuetify', 'vuetify/components'],
+      external: ['vue', 'bootstrap-vue-next', /^bootstrap-vue-next\//],
     },
   },
 })

@@ -6,9 +6,9 @@ import type { IconsOptions } from './constants/icons'
 export type { Editor, JSONContent } from '@tiptap/core'
 
 /**
- * Represents the onChange event for VuetifyTiptap.
+ * Represents the onChange event for BootstrapTiptap.
  */
-export interface VuetifyTiptapOnChange {
+export interface BootstrapTiptapOnChange {
   /** Editor object */
   editor: CoreEditor
   /** Output content, can be a string or JSON content */

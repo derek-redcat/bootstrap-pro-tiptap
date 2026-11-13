@@ -2,7 +2,6 @@
 import type { LinkAttrs } from '../../link/types'
 
 import { ref } from 'vue'
-import OriginalThemeProvider from '../../OriginalThemeProvider.vue'
 import ActionButton from '../src/index.vue'
 import { extActionButtonProps } from '../src/props'
 
@@ -31,8 +30,6 @@ function onAction() {
     :is-active="() => editor.isActive('link') || false"
     :action="onAction"
   >
-    <OriginalThemeProvider>
-      <slot name="dialog" :props="{ editor, value: attrs.href, ...attrs }" />
-    </OriginalThemeProvider>
+    <slot name="dialog" :props="{ editor, value: attrs.href, ...attrs }" />
   </ActionButton>
 </template>

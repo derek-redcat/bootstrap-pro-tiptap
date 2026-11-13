@@ -2,13 +2,12 @@
 import type { AnyExtension, JSONContent } from '@tiptap/core'
 import type { IWhiteList } from 'xss'
 import { generateHTML } from '@tiptap/html'
-import { computed, unref } from 'vue'
-import { useTheme } from 'vuetify'
+import { computed, ref, unref } from 'vue'
 import Xss from 'xss'
 
 import xssRules from '@/constants/xss-rules'
-import { useContext, useMarkdownTheme } from '@/hooks'
-import { isBoolean, isString } from '@/utils/utils'
+import { useBsTheme, useContext, useMarkdownTheme } from '@/hooks'
+import { isString } from '@/utils/utils'
 
 interface Props {
   value?: string | JSONContent
@@ -31,18 +30,11 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const { state } = useContext()
-const theme = useTheme()
+const rootRef = ref<HTMLElement | null>(null)
+const { isDark, themeAttr } = useBsTheme(rootRef, () => props.dark)
 const { markdownThemeStyle } = useMarkdownTheme(computed(() => props.markdownTheme))
 
 const ext = computed<AnyExtension[]>(() => [...state.extensions, ...props.extensions])
-
-const isDark = computed<boolean>(() => {
-  if (isBoolean(props.dark))
-    return props.dark
-  if (isBoolean(theme.current.value.dark))
-    return theme.current.value.dark
-  return false
-})
 
 const viewerClass = computed(() => ({
   __dark: unref(isDark),
@@ -74,7 +66,13 @@ const cleanValue = computed(() => {
 </script>
 
 <template>
-  <div class="vuetify-pro-tiptap-editor__content" :class="viewerClass" :style="{ width: '100%' }">
+  <div
+    ref="rootRef"
+    class="bootstrap-pro-tiptap-editor__content"
+    :class="viewerClass"
+    :data-bs-theme="themeAttr"
+    :style="{ width: '100%' }"
+  >
     <slot name="before" />
     <!-- eslint-disable-next-line vue/no-v-html -->
     <div class="content" v-html="cleanValue" />

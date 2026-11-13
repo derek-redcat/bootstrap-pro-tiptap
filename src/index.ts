@@ -1,9 +1,11 @@
-export { default as VuetifyTiptap } from './components/VuetifyTiptap.vue'
-export { default as VuetifyViewer } from './components/VuetifyViewer.vue'
+export { default as BootstrapTiptap } from './components/BootstrapTiptap.vue'
+export { default as BootstrapViewer } from './components/BootstrapViewer.vue'
+
+export { default as Icon } from './components/Icon.vue'
 
 export * from './extensions'
-
-export { useContext } from './hooks'
+export { useActivator, useContext } from './hooks'
+export type { Activator } from './hooks'
 
 export * from './install'
 export * from './locales'
@@ -11,7 +13,7 @@ export type * from './type'
 
 declare module 'vue' {
   export interface GlobalComponents {
-    VuetifyTiptap: typeof import('./components/VuetifyTiptap.vue').default
-    VuetifyViewer: typeof import('./components/VuetifyViewer.vue').default
+    BootstrapTiptap: typeof import('./components/BootstrapTiptap.vue').default
+    BootstrapViewer: typeof import('./components/BootstrapViewer.vue').default
   }
 }

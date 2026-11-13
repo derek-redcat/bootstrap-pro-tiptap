@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { ImageForm } from './types'
 
+import { BFormCheckbox, BFormFile, BFormGroup, BFormInput, BSpinner } from 'bootstrap-vue-next'
 import { computed, ref, unref } from 'vue'
 
-import { getIcon } from '@/constants/icons'
 import Logger from '@/utils/logger'
 
 interface Props {
@@ -29,10 +29,11 @@ const form = computed({
   set: val => emit('update:modelValue', val),
 })
 
-async function onFileSelected(files: File | File[]) {
-  const file = files instanceof File ? files : files[0]
+async function onFileSelected(files: File | File[] | null | undefined) {
+  const file = files instanceof File ? files : files?.[0]
   if (!file) {
-    throw new Error('No files to upload')
+    form.value = { ...unref(form), file: undefined, src: undefined }
+    return
   }
 
   try {
@@ -44,6 +45,7 @@ async function onFileSelected(files: File | File[]) {
 
     form.value = {
       ...unref(form),
+      file,
       src: data,
     }
   }
@@ -57,27 +59,24 @@ async function onFileSelected(files: File | File[]) {
 </script>
 
 <template>
-  <VForm :disabled="loading">
-    <VFileInput
-      v-model="form.file"
-      :label="t('editor.image.dialog.form.file')"
-      accept="image/*"
-      :loading="loading"
-      :prepend-icon="getIcon('fileImagePlus')"
-      @update:model-value="onFileSelected"
-      @click:clear="form.src = undefined"
-    />
+  <fieldset :disabled="loading">
+    <BFormGroup :label="t('editor.image.dialog.form.file')" label-for="bpt-image-file" class="mb-3">
+      <div class="d-flex align-items-center gap-2">
+        <BFormFile id="bpt-image-file" accept="image/*" @update:model-value="onFileSelected" />
+        <BSpinner v-if="loading" small />
+      </div>
+    </BFormGroup>
 
-    <VTextField
-      v-model="form.src"
-      :label="t('editor.image.dialog.form.link')"
-      disabled
-      autofocus
-      :prepend-icon="getIcon('linkVariant')"
-    />
+    <BFormGroup :label="t('editor.image.dialog.form.link')" label-for="bpt-image-upload-src" class="mb-3">
+      <BFormInput id="bpt-image-upload-src" :model-value="form.src" disabled />
+    </BFormGroup>
 
-    <VTextField v-model="form.alt" :label="t('editor.image.dialog.form.alt')" :prepend-icon="getIcon('text')" />
+    <BFormGroup :label="t('editor.image.dialog.form.alt')" label-for="bpt-image-upload-alt" class="mb-3">
+      <BFormInput id="bpt-image-upload-alt" v-model="form.alt" />
+    </BFormGroup>
 
-    <VCheckbox v-model="form.lockAspectRatio" :label="t('editor.image.dialog.form.aspectRatio')" />
-  </VForm>
+    <BFormCheckbox v-model="form.lockAspectRatio">
+      {{ t('editor.image.dialog.form.aspectRatio') }}
+    </BFormCheckbox>
+  </fieldset>
 </template>

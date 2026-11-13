@@ -15,3 +15,19 @@ onlyBuiltDependencies:
   - simple-git-hooks
   - unrs-resolver
   - vue-demi
+
+# Moved from .npmrc: pnpm 10+ only reads pnpm-specific settings from this file
+strictPeerDependencies: false
+
+publicHoistPattern:
+  - '*types*'
+  - '*eslint*'
+  - '*prettier*'
+  - '@vue*'
+  - '@semantic-release/*'
+  - '@commitlint/*'
+  - '*stylelint*'
+  - 'postcss*'
+  - tslib
+  - '@tiptap/*'
+  - 'prosemirror*'

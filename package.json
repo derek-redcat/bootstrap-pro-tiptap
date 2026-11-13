@@ -7,36 +7,36 @@
   "description": "tiptap text editor on vuejs and bootstrap",
   "author": "yikoyu<2282373181@qq.com>",
   "license": "MIT",
-  "homepage": "https://yikoyu.github.io/vuetify-pro-tiptap/master/",
+  "homepage": "https://github.com/derek-redcat/vuetify-pro-tiptap#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yikoyu/vuetify-pro-tiptap.git"
+    "url": "git+https://github.com/derek-redcat/vuetify-pro-tiptap.git"
   },
   "keywords": [
     "vue",
     "vue.js",
     "typescript",
-    "vuetify",
+    "bootstrap",
+    "bootstrap-vue-next",
     "tiptap",
     "editor",
-    "material design",
     "wysiwyg",
     "markdown"
   ],
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
-      "import": "./lib/vuetify-pro-tiptap.js",
-      "require": "./lib/vuetify-pro-tiptap.umd.cjs"
+      "import": "./lib/bootstrap-pro-tiptap.js",
+      "require": "./lib/bootstrap-pro-tiptap.umd.cjs"
     },
     "./style.css": {
-      "import": "./lib/vuetify-pro-tiptap.css",
-      "require": "./lib/vuetify-pro-tiptap.css"
+      "import": "./lib/bootstrap-pro-tiptap.css",
+      "require": "./lib/bootstrap-pro-tiptap.css"
     },
     "./*": "./lib/*"
   },
-  "main": "./lib/vuetify-pro-tiptap.umd.cjs",
-  "module": "./lib/vuetify-pro-tiptap.js",
+  "main": "./lib/bootstrap-pro-tiptap.umd.cjs",
+  "module": "./lib/bootstrap-pro-tiptap.js",
   "types": "./lib/index.d.ts",
   "files": [
     "LICENSE",
@@ -61,8 +61,9 @@
     "prepare": "simple-git-hooks"
   },
   "peerDependencies": {
-    "vue": "^3.5.0",
-    "vuetify": "^3.0.0"
+    "bootstrap": "^5.3.0",
+    "bootstrap-vue-next": "^1.2.0",
+    "vue": "^3.5.0"
   },
   "dependencies": {
     "@tiptap/core": "^3.14.0",
@@ -105,6 +106,8 @@
     "@yikoyu/commitlint-config": "^0.2.3",
     "@yikoyu/semantic-release-config": "^0.1.5",
     "@yikoyu/stylelint-config": "^0.1.4",
+    "bootstrap": "^5.3.9",
+    "bootstrap-vue-next": "^1.2.4",
     "conventional-changelog-conventionalcommits": "^9.1.0",
     "cz-git": "^1.12.0",
     "czg": "^1.12.0",
@@ -118,12 +121,10 @@
     "simple-git-hooks": "^2.13.1",
     "stylelint": "^17.0.0",
     "typescript": "^5.9.3",
-    "unplugin-vue-components": "^30.0.0",
     "vite": "^7.3.6",
     "vite-plugin-dts": "^4.5.4",
     "vue": "^3.5.25",
     "vue-tsc": "2.0.29",
-    "vuetify": "^3.11.6",
     "xss": "^1.0.15"
   },
   "simple-git-hooks": {

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { Editor } from '@tiptap/vue-3'
+import { locale, useActivator } from 'bootstrap-pro-tiptap'
+import { BButton, BFormGroup, BFormInput, BModal } from 'bootstrap-vue-next'
 import { computed, ref, watch } from 'vue'
-import { locale } from 'vuetify-pro-tiptap'
 
 interface LinkAttrs {
   href?: string
@@ -31,6 +32,11 @@ function generateLinkAttrs(): LinkAttrs {
 const attrs = ref(generateLinkAttrs())
 
 const dialog = ref<boolean>(false)
+
+// Opens when the toolbar button is clicked (replaces Vuetify's activator="parent")
+useActivator()?.onActivate(() => {
+  dialog.value = true
+})
 
 const isDisabled = computed(() => {
   const { href, target } = attrs.value
@@ -68,31 +74,17 @@ watch(dialog, (val) => {
 </script>
 
 <template>
-  <VDialog v-model="dialog" max-width="400" activator="parent" @click:outside="close">
-    <VCard>
-      <VToolbar class="px-6" density="compact">
-        <span class="headline">{{ locale.message[locale.lang]['editor.link.dialog.title'] }}</span>
+  <BModal v-model="dialog" lazy :title="locale.message[locale.lang]['editor.link.dialog.title']" centered @hidden="close">
+    <p>This is a custom dialog component; please use the <strong>dialogComponent</strong> parameter.</p>
 
-        <VSpacer />
+    <BFormGroup :label="locale.message[locale.lang]['editor.link.dialog.link']">
+      <BFormInput v-model="attrs.href" autofocus />
+    </BFormGroup>
 
-        <VBtn class="mx-0" icon @click="close">
-          <VIcon icon="$close" />
-        </VBtn>
-      </VToolbar>
-
-      <VCardText>
-        <div>This is a custom dialog component;</div>
-
-        <div>please use the <strong>dialogComponent</strong> parameter.</div>
-
-        <VTextField v-model="attrs.href" :label="locale.message[locale.lang]['editor.link.dialog.link']" autofocus />
-      </VCardText>
-
-      <VCardActions>
-        <VBtn :disabled="isDisabled" @click="apply">
-          {{ locale.message[locale.lang]['editor.link.dialog.button.apply'] }}
-        </VBtn>
-      </VCardActions>
-    </VCard>
-  </VDialog>
+    <template #footer>
+      <BButton variant="primary" :disabled="isDisabled" @click="apply">
+        {{ locale.message[locale.lang]['editor.link.dialog.button.apply'] }}
+      </BButton>
+    </template>
+  </BModal>
 </template>

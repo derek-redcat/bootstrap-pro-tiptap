@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import type { ActionMenuButtonItem } from './types'
 
+import { BListGroup, BListGroupItem } from 'bootstrap-vue-next'
 import { computed, ref } from 'vue'
+import Icon from '@/components/Icon.vue'
 import { getIcon } from '@/constants/icons'
+import { getCssUnitWithDefault } from '@/utils/utils'
 import { ActionButton } from '../../ActionButton'
+import ActivatorPopover from '../../ActivatorPopover.vue'
 import { actionButtonMenuProps } from './props'
 
 const props = defineProps(actionButtonMenuProps)
@@ -27,6 +31,11 @@ const active = computed<ActionMenuButtonItem>(() => {
 
   return item
 })
+
+function onSelect(item: ActionMenuButtonItem) {
+  item.action?.()
+  menu.value = false
+}
 </script>
 
 <template>
@@ -38,22 +47,26 @@ const active = computed<ActionMenuButtonItem>(() => {
     :color="color"
     :is-active="active.isActive"
   >
-    <VMenu v-model="menu" activator="parent">
-      <VList density="compact" :max-height="maxHeight">
+    <ActivatorPopover v-model="menu">
+      <BListGroup
+        flush
+        class="bootstrap-pro-tiptap-menu"
+        :style="{ maxHeight: getCssUnitWithDefault(maxHeight), overflowY: 'auto' }"
+      >
         <template v-for="(item, i) in items" :key="i">
-          <VListItem :active="item.isActive()" :disabled="item.disabled" @click="item.action">
-            <template #prepend>
-              <VIcon v-if="item.icon" :icon="getIcon(item.icon)" />
-            </template>
-
-            <VListItemTitle :style="item.style">
-              {{ item.title }}
-            </VListItemTitle>
-          </VListItem>
-
-          <VDivider v-if="item.divider" />
+          <BListGroupItem
+            button
+            class="d-flex align-items-center gap-2 py-1"
+            :class="{ 'border-bottom': item.divider }"
+            :active="item.isActive()"
+            :disabled="item.disabled"
+            @click="onSelect(item)"
+          >
+            <Icon v-if="item.icon" :icon="getIcon(item.icon)" />
+            <span :style="item.style">{{ item.title }}</span>
+          </BListGroupItem>
         </template>
-      </VList>
-    </VMenu>
+      </BListGroup>
+    </ActivatorPopover>
   </ActionButton>
 </template>

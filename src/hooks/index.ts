@@ -1,3 +1,6 @@
+export { provideActivator, useActivator } from './use-activator'
+export type { Activator } from './use-activator'
+export { useBsTheme } from './use-bs-theme'
 export { createContext, useContext } from './use-context'
 export { useMarkdownTheme } from './use-markdown-theme'
 export { useProvideTiptapStore, useTiptapStore } from './use-store'

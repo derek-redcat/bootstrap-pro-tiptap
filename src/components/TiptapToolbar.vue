@@ -54,10 +54,10 @@ function getMenus(): Menu[] {
 </script>
 
 <template>
-  <VToolbar v-bind="$attrs" density="compact" flat height="auto" class="py-1 ps-1">
+  <div v-bind="$attrs" class="bootstrap-pro-tiptap-toolbar">
     <template v-for="(item, key) in getMenus()" :key="key">
       <!-- Spacer -->
-      <VSpacer v-if="item.spacer" />
+      <div v-if="item.spacer" class="flex-grow-1" />
       <!-- Buttons -->
       <component
         :is="item.button.component"
@@ -70,7 +70,7 @@ function getMenus(): Menu[] {
       </component>
 
       <!-- Divider -->
-      <VDivider v-if="item.divider" vertical class="mx-1 me-2" />
+      <div v-if="item.divider" class="vr mx-1" />
     </template>
-  </VToolbar>
+  </div>
 </template>

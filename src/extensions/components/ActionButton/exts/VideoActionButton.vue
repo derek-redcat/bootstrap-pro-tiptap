@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import OriginalThemeProvider from '../../OriginalThemeProvider.vue'
 import ActionButton from '../src/index.vue'
 import { extActionButtonProps } from '../src/props'
 
@@ -24,8 +23,6 @@ function onAction() {
     :tooltip="t('editor.video.tooltip')"
     icon="video"
   >
-    <OriginalThemeProvider>
-      <slot name="dialog" :props="{ editor, value: src }" />
-    </OriginalThemeProvider>
+    <slot name="dialog" :props="{ editor, value: src }" />
   </ActionButton>
 </template>

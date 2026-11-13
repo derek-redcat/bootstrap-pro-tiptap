@@ -31,6 +31,6 @@ watchEffect(() => {
     :color="state.highlight"
     :is-active="() => editor.isActive('highlight') || false"
   >
-    <ColorPicker v-model="state.highlight" activator="parent" :nudge-top="-4" :nudge-left="8" @change="action" />
+    <ColorPicker v-model="state.highlight" @change="action" />
   </ActionButton>
 </template>
