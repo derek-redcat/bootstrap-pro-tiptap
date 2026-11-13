@@ -81,8 +81,9 @@ const attrs = useAttrs()
 // external change that should overwrite the editor content.
 const lastEmittedValue = ref<Props['modelValue']>(props.modelValue)
 
-const rootRef = ref<HTMLElement | null>(null)
-const { isDark, themeAttr } = useBsTheme(rootRef, () => props.dark)
+// Theme is detected from an anchor that stays in place, so it survives the fullscreen teleport to <body>
+const anchorRef = ref<HTMLElement | null>(null)
+const { isDark, themeAttr } = useBsTheme(anchorRef, () => props.dark)
 const { state, isFullscreen } = useProvideTiptapStore()
 const { markdownThemeStyle } = useMarkdownTheme(
   computed(() => props.markdownTheme),
@@ -227,13 +228,14 @@ defineExpose({ editor })
 </script>
 
 <template>
+  <span ref="anchorRef" class="d-none" aria-hidden="true" />
+
   <Teleport to="body" :disabled="!isFullscreen">
     <div
       v-if="editor"
-      ref="rootRef"
       class="bootstrap-pro-tiptap"
       :class="{ dense }"
-      :data-bs-theme="themeAttr"
+      :data-bs-theme="isFullscreen ? (isDark ? 'dark' : 'light') : themeAttr"
     >
       <div
         v-bind="$attrs"
