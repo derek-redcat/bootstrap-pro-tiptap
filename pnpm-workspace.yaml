@@ -1,6 +1,13 @@
 packages:
   - examples
 
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  json-editor-vue: true
+  simple-git-hooks: true
+  vue-demi: true
+
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - esbuild
