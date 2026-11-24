@@ -1,7 +1,7 @@
 {
   "name": "bootstrap-pro-tiptap",
   "type": "module",
-  "version": "2.8.3",
+  "version": "0.0.0-development",
   "private": false,
   "packageManager": "pnpm@12.14.0",
   "description": "tiptap text editor on vuejs and bootstrap",
@@ -44,6 +44,10 @@
     "lib",
     "package.json"
   ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "engines": {
     "node": "^18.0.0 || ^20.0.0 || >=22.0.0"
   },
@@ -57,7 +61,6 @@
     "lint:fix": "eslint . --fix && stylelint **/*.{css,less,scss,vue} --fix",
     "commit": "czg",
     "check:types": "vue-tsc --noEmit --skipLibCheck",
-    "push": "pnpm build:lib && pnpm publish --no-git-checks --registry https://registry.npmjs.org/",
     "prepare": "simple-git-hooks"
   },
   "peerDependencies": {

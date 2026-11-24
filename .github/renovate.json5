@@ -1,3 +1,5 @@
 {
-  "extends": ["github>yikoyu/renovate-config:javascript"]
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "baseBranches": ["main"]
 }

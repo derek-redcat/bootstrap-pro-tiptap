@@ -1,0 +1,47 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.repository == 'derek-redcat/bootstrap-pro-tiptap'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # push the chore(release) commit and tag, create the GitHub release
+      issues: write
+      pull-requests: write
+      id-token: write # npm provenance (and OIDC trusted publishing once configured)
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build:lib
+
+      - name: Release
+        run: pnpm exec semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Required for the first publish: npm trusted publishing can only be set up once the package exists.
+          # After 1.0.0, configure a trusted publisher on npmjs.com and this secret can be removed.
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

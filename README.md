@@ -25,13 +25,10 @@ A WYSIWYG rich-text editor using [tiptap](https://github.com/ueberdosis/tiptap) 
 | Icons rendered with `VIcon` | Icons rendered as inline SVG (`Icon` component, accepts `@mdi/js` paths) |
 
 ## Installation
-### From git
 
 ```shell
-pnpm add github:derek-redcat/bootstrap-pro-tiptap#bootstrap bootstrap bootstrap-vue-next
+pnpm add bootstrap-pro-tiptap bootstrap bootstrap-vue-next
 ```
-
-> `lib/` is build output and is not committed. Installing from git requires either committing a build or adding a `prepare` build script; publishing to a (private) registry is the simplest option.
 
 ### Peer dependencies
 - `vue` ^3.5
