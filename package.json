@@ -7,10 +7,10 @@
   "description": "tiptap text editor on vuejs and bootstrap",
   "author": "yikoyu<2282373181@qq.com>",
   "license": "MIT",
-  "homepage": "https://github.com/derek-redcat/vuetify-pro-tiptap#readme",
+  "homepage": "https://github.com/derek-redcat/bootstrap-pro-tiptap#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/derek-redcat/vuetify-pro-tiptap.git"
+    "url": "git+https://github.com/derek-redcat/bootstrap-pro-tiptap.git"
   },
   "keywords": [
     "vue",
