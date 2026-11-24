@@ -1,7 +1,7 @@
 {
   "name": "bootstrap-pro-tiptap",
   "type": "module",
-  "version": "0.0.0-development",
+  "version": "1.0.0",
   "private": false,
   "packageManager": "pnpm@12.14.0",
   "description": "tiptap text editor on vuejs and bootstrap",
