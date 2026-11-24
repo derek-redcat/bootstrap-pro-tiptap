@@ -1,8 +1,6 @@
-import { yikoyu } from '@yikoyu/commitlint-config'
-
-export default yikoyu({
+export default {
+  extends: ['@commitlint/config-conventional'],
   rules: {
-    ...yikoyu().rules,
     'footer-max-line-length': [0],
   },
-})
+}

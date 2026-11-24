@@ -6,6 +6,12 @@
   "packageManager": "pnpm@12.14.0",
   "description": "tiptap text editor on vuejs and bootstrap",
   "author": "yikoyu<2282373181@qq.com>",
+  "contributors": [
+    {
+      "name": "Derek Carlson",
+      "url": "https://github.com/derek-redcat"
+    }
+  ],
   "license": "MIT",
   "homepage": "https://github.com/derek-redcat/bootstrap-pro-tiptap#readme",
   "repository": {
@@ -103,12 +109,12 @@
   "devDependencies": {
     "@antfu/eslint-config": "^6.7.3",
     "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
     "@mdi/js": "^7.4.47",
+    "@semantic-release/changelog": "^7.0.0",
+    "@semantic-release/git": "^11.0.1",
     "@vitejs/plugin-vue": "^6.0.3",
     "@vueuse/core": "^14.1.0",
-    "@yikoyu/commitlint-config": "^0.2.3",
-    "@yikoyu/semantic-release-config": "^0.1.5",
-    "@yikoyu/stylelint-config": "^0.1.4",
     "bootstrap": "^5.3.9",
     "bootstrap-vue-next": "^1.2.4",
     "conventional-changelog-conventionalcommits": "^9.1.0",
@@ -118,11 +124,17 @@
     "eslint": "^9.39.4",
     "eslint-plugin-format": "^1.1.0",
     "lint-staged": "^16.2.7",
+    "postcss-html": "^2.0.1",
+    "postcss-scss": "^4.0.9",
     "rollup-plugin-pure": "^0.4.0",
     "sass": "1.94.3",
     "semantic-release": "^25.0.2",
     "simple-git-hooks": "^2.13.1",
-    "stylelint": "^17.0.0",
+    "stylelint": "^18.1.0",
+    "stylelint-config-recess-order": "^7.10.1",
+    "stylelint-config-recommended-vue": "^2.0.0",
+    "stylelint-config-standard": "^41.1.0",
+    "stylelint-config-standard-scss": "^18.0.0",
     "typescript": "^5.9.3",
     "vite": "^7.3.6",
     "vite-plugin-dts": "^4.5.4",
